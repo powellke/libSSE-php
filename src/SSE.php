@@ -245,7 +245,11 @@ class SSE implements ArrayAccess
                 foreach ($that->getEventListeners() as $event => $handler) {
                     if ($handler->check()) { // Check if the data is avaliable
                         $data = $handler->update(); // Get the data
-                        $id = $that->getNewId();
+                         if (method_exists($handler, 'getId')) {
+                            $id = $handler->getId();
+                        } else {
+                            $id = $that->getNewId();
+                        }
                         $that->sendBlock($id, $data, $event);
                         
                         // Make sure the data has been sent to the client
